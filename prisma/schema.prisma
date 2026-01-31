@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  role      Role     @default(MEMBER)
+  createdAt DateTime @default(now())
+
+  // Relasi: User punya banyak history peminjaman
+  loans Loan[]
+}
+
+model Book {
+  id     Int    @id @default(autoincrement())
+  title  String
+  author String
+  stock  Int    @default(0) // Stok fisik buku
+
+  // Relasi: Buku bisa punya banyak kategori
+  categories CategoryOnBook[]
+
+  // Relasi: Buku ada di banyak record peminjaman
+  loans Loan[]
+}
+
+model Category {
+  id    Int              @id @default(autoincrement())
+  name  String           @unique
+  books CategoryOnBook[]
+}
+
+// Model untuk Many-to-Many Explicit (Agar lebih fleksibel query-nya)
+model CategoryOnBook {
+  book       Book     @relation(fields: [bookId], references: [id])
+  bookId     Int
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+
+  @@id([bookId, categoryId]) // Composite Key
+}
+
+// peminjaman
+model Loan {
+  id         Int       @id @default(autoincrement())
+  userId     Int
+  bookId     Int
+  borrowedAt DateTime  @default(now())
+  dueDate    DateTime // Tanggal wajib kembali
+  returnedAt DateTime? // Nullable (berarti belum dikembalikan)
+
+  user User @relation(fields: [userId], references: [id])
+  book Book @relation(fields: [bookId], references: [id])
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}

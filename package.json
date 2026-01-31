@@ -1,0 +1,25 @@
+{
+  "name": "sistem-manajemen-perpustakaan",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "gen:client": "prisma generate client"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js",
+    "studio": "npx prisma studio"
+  },
+  "devDependencies": {
+    "@prisma/client": "^5.22.0",
+    "prisma": "^5.22.0"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "nodemon": "^3.1.11"
+  }
+}
