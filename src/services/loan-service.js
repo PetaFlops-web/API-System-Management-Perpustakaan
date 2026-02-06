@@ -2,10 +2,17 @@ import prisma from "../config/db.js";
 
 const borrowBook = async (userId, bookId, dueDate) => {
   return prisma.$transaction(async (tx) => {
+    const user = await tx.user.findFirst({
+      where: { id: userId, role: "MEMBER" },
+    });
+
+    if (!user) throw new Error("invalid user or not a member");
+
     const book = await tx.book.findUnique({
       where: { id: bookId },
       select: { id: true, stock: true },
     });
+
     if (!book) throw new Error("Book not found");
     if (book.stock < 1) throw new Error("Book out of stock");
 

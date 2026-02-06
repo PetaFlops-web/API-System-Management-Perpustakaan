@@ -8,15 +8,23 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
-    "gen:client": "prisma generate client"
+    "gen:client": "prisma generate client",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:watch": "jest --watch"
   },
   "prisma": {
     "seed": "node prisma/seed.js",
     "studio": "npx prisma studio"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.0",
+    "@jest/globals": "^30.2.0",
     "@prisma/client": "^5.22.0",
-    "prisma": "^5.22.0"
+    "babel-jest": "^30.2.0",
+    "jest": "^30.2.0",
+    "prisma": "^5.22.0",
+    "supertest": "^7.2.2"
   },
   "dependencies": {
     "express": "^5.2.1",

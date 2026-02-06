@@ -28,6 +28,10 @@ const searchBooksByCatgory = async (categoryName, page, pageSize) => {
       orderBy: { id: "desc" },
     });
 
+    if (findBooks.length === 0) {
+      throw new Error("No books found for the given category");
+    }
+
     const totalBooks = await tx.book.count({
       where: {
         categories: {
